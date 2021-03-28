@@ -1,4 +1,3 @@
-import com.sun.org.slf4j.internal.LoggerFactory
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -26,10 +25,15 @@ private fun initLogger() {
     }
 }
 
+private fun readToken(): String? {
+    val classLoader: ClassLoader = object {}.javaClass.classLoader
+    return classLoader.getResourceAsStream("token")?.bufferedReader()?.readText()
+}
+
 suspend fun main()  {
     initLogger()
     val logger = LoggerFactory.getLogger("main")
-    val token = ""
+    val token = readToken()!!
     val sandboxMode = true
     val ticker = "AAPL"
     val candleInterval = CandleInterval._1MIN
@@ -77,5 +81,4 @@ suspend fun main()  {
 //
 //        api.streamingContext.sendRequest(StreamingRequest.subscribeCandle(instrument.figi, candleInterval))
 //    }
-    logger.info("Main ended")
 }
